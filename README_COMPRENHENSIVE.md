@@ -50,7 +50,7 @@ npm install
 # 4. Install Playwright browsers (required for testing)
 npx playwright install
 
-# 5. Start services with Docker (start from this step if you already have the project cloned)
+# 5. Start services with Docker (NOTE: Start from this step if you've already cloned the project)
 docker compose up -d --build
 
 # 6. Verify API is running

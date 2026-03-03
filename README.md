@@ -39,7 +39,7 @@ Go to [README_COMPRENHENSIVE > Quick Setup Commands](README_COMPRENHENSIVE.md#qu
 - **Orchestration**: Docker Compose
 - **CI**: GitHub Actions
 - **Cost**: $0 (runs locally + GitHub Actions)
-- **AI**: I am not a developer, so "Claude AI" was used to create the API. However, the automation code is 100% mine 🤓
+- **AI**: "Claude AI" was used to create the API. However, the automation code is 100% mine 🤓
 
 ---
 ## Are you new to API automation?
