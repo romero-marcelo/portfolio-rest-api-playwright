@@ -4,9 +4,7 @@ Hi there! 👋
 
 This is a minimal Fintech API I created to demonstrate my ability to design and build a REST API testing suite using Playwright.
 
-There is a separate guide [here](docs/QA_API_TESTING_GUIDE.md) for new software testers to RUN and LEARN API automation testing.
-
-> **Note:** Only the automation code is 100% mine. I implemented the API with the help of Claude AI.
+> **Note:** The automation code is 100% mine. The API was implemented using Claude AI.
 
 ## Key Areas
 
@@ -20,18 +18,18 @@ There is a separate guide [here](docs/QA_API_TESTING_GUIDE.md) for new software 
 ## Where to Look?
 
 ### Core Test Suite
+- **[tests/](tests/)** - for complete test suite
 - **[tests/api/auth.spec.ts](tests/api/auth.spec.ts)** - Authentication flow testing
 - **[tests/api/accounts.spec.ts](tests/api/accounts.spec.ts)** - Account management & stateful operations
 - **[tests/helpers/auth-helpers.ts](tests/helpers/auth-helpers.ts)** - Authentication test patterns
 - **[tests/helpers/create-account-helpers.ts](tests/helpers/create-account-helpers.ts)** - Account creation utilities
-- **[tests/](tests/)** - for complete test suite
 
 ### Documentation
 - **[docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)** - Complete API endpoint documentation
 - **[docs/QA_API_TESTING_GUIDE.md](docs/QA_API_TESTING_GUIDE.md)** - Testing methodology and patterns (For new TESTERS)
 
 ## Do you want to run it?
-Go to [README > Quick Setup Commands](../README.md#quick-setup-commands) for step-by-step instructions.
+Go to [README_COMPRENHENSIVE > Quick Setup Commands](README_COMPRENHENSIVE.md#quick-setup-commands) for step-by-step instructions.
 
 
 ## 🛠️ Tech Stack
@@ -44,8 +42,11 @@ Go to [README > Quick Setup Commands](../README.md#quick-setup-commands) for ste
 - **AI**: I am not a developer, so "Claude AI" was used to create the API. However, the automation code is 100% mine 🤓
 
 ---
+## Are you new to API automation?
+Check out [here](docs/QA_API_TESTING_GUIDE.md).
+
+---
 ## ☎️ Contact Me
 Do not hesitate to contact me if you have any questions or need further clarification:
 
 - **LinkedIn**: [LinkedIn](https://www.linkedin.com/in/marcelo-romero/)
-- **Email**: contact.marcelo.romero@gmail.com

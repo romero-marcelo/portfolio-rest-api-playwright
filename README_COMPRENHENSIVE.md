@@ -4,8 +4,6 @@ This is a minimal fintech API (no UI) that you can clone and run locally for FRE
 
 Check out the [GUIDE](docs/QA_API_TESTING_GUIDE.md) if you are new to API testing automation.
 
-For a complete README, please check out the [README_COMPLETE.md](README_COMPLETE.md) file.
-
 On this version, we are not performing database validation which is an important aspect of API testing. As this is a work in progress, I will be adding this feature in the near future.
 
 
@@ -26,11 +24,11 @@ On this version, we are not performing database validation which is an important
 
 ## Prerequisites & Setup
 
-- **Docker Desktop** [Download](https://www.docker.com/products/docker-desktop/)
-- **Node.js 20+** [Download](https://nodejs.org/en/download/) (includes npm)
+- **Code Editor** (VS Code, Windsurf, etc)
 - **API Testing Tool** (Optional) recommended for manual testing:
   - Postman, Insomnia, etc
-- **Code Editor** (VS Code, Windsurf, etc)
+- **Docker Desktop** [Download](https://www.docker.com/products/docker-desktop/)
+- **Node.js 20+** [Download](https://nodejs.org/en/download/) (includes npm)
 - **Playwright** [Download](https://playwright.dev/docs/intro)
 
 ----
@@ -52,7 +50,7 @@ npm install
 # 4. Install Playwright browsers (required for testing)
 npx playwright install
 
-# 5. Start services with Docker (assuming Docker Desktop is downloaded and running in your machine)
+# 5. Start services with Docker (start from this step if you already have the project cloned)
 docker compose up -d --build
 
 # 6. Verify API is running
