@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import { getAuthToken } from '../helpers/index';
-const BASE_URL = process.env.API_BASE_URL;
 
 test.describe('Accounts Endpoint', () => {
   test.describe('Happy Path', () => {
@@ -9,7 +8,7 @@ test.describe('Accounts Endpoint', () => {
       const token = await getAuthToken(request);
 
       // Then call /accounts with token
-      const response = await request.post(`${BASE_URL}/accounts`, {
+      const response = await request.post(`/accounts`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { currency: 'EUR' },
       });
@@ -26,7 +25,7 @@ test.describe('Accounts Endpoint', () => {
     test('POST /accounts: create USD account returns 201, id, currency, balance', async ({ request }) => {
       const token = await getAuthToken(request);
 
-      const response = await request.post(`${BASE_URL}/accounts`, {
+      const response = await request.post(`/accounts`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { currency: 'USD' },
       });
@@ -43,14 +42,14 @@ test.describe('Accounts Endpoint', () => {
     test('GET /accounts/:id retrieve an existing account details', async ({ request }) => {
       // First create new account
       const token = await getAuthToken(request);
-      const createResponse = await request.post(`${BASE_URL}/accounts`, {
+      const createResponse = await request.post(`/accounts`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { currency: 'EUR' },
       });
       const createdAccount = await createResponse.json();
 
       // Fetch & Assert newly created account
-      const response = await request.get(`${BASE_URL}/accounts/${createdAccount.id}`, {
+      const response = await request.get(`/accounts/${createdAccount.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const { id, currency, balance } = await response.json();
@@ -63,7 +62,7 @@ test.describe('Accounts Endpoint', () => {
     test('POST /accounts: invalid currency (GBP) returns 400 and error message', async ({ request }) => {
       const token = await getAuthToken(request);
 
-      const response = await request.post(`${BASE_URL}/accounts`, {
+      const response = await request.post(`/accounts`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { currency: 'GBP' },
       });
@@ -76,7 +75,7 @@ test.describe('Accounts Endpoint', () => {
     test('POST /accounts: missing currency returns 400 and validation error', async ({ request }) => {
       const token = await getAuthToken(request);
 
-      const response = await request.post(`${BASE_URL}/accounts`, {
+      const response = await request.post(`/accounts`, {
         headers: { Authorization: `Bearer ${token}` },
         data: {},
       });
@@ -89,7 +88,7 @@ test.describe('Accounts Endpoint', () => {
     test('POST /accounts: request with invalid token returns 401 (UNAUTHORIZED)', async ({ request }) => {
       const invalidToken = 'fakeToken123';
 
-      const response = await request.post(`${BASE_URL}/accounts`, {
+      const response = await request.post(`/accounts`, {
         headers: { Authorization: `Bearer ${invalidToken}` },
         data: { currency: 'USD' },
       });
@@ -101,13 +100,13 @@ test.describe('Accounts Endpoint', () => {
 
     test('GET /accounts/:id: request without token returns 401 (UNAUTHORIZED)', async ({ request }) => {
       const token = await getAuthToken(request);
-      const postResponse = await request.post(`${BASE_URL}/accounts`, {
+      const postResponse = await request.post(`/accounts`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { currency: 'EUR' },
       });
       const { id } = await postResponse.json();
 
-      const response = await request.get(`${BASE_URL}/accounts/${id}`, {
+      const response = await request.get(`/accounts/${id}`, {
         headers: { Authorization: `` },
       });
       const body = await response.json();
@@ -119,7 +118,7 @@ test.describe('Accounts Endpoint', () => {
     test('GET /accounts/:id: invalid account id returns 404 (NOT_FOUND)', async ({ request }) => {
       const token = await getAuthToken(request);
       const invalidAccountId = '11111111-2222-3333-44b4-55fe55555a55';
-      const response = await request.get(`${BASE_URL}/accounts/${invalidAccountId}`, {
+      const response = await request.get(`/accounts/${invalidAccountId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const body = await response.json();

@@ -1,14 +1,13 @@
 import { test, expect } from '@playwright/test';
 import {getAuthToken} from '../helpers/auth-helpers';
 import jwt from 'jsonwebtoken';
-const BASE_URL = process.env.API_BASE_URL;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 test.describe('Auth Endpoint', () => {
   test.describe('Happy Path', () => {
     test('POST /auth/login: returns 200 and Token', async ({ request }) => {
       // First, obtaining JWT token
-      const response = await request.post(`${BASE_URL}/auth/login`, {
+      const response = await request.post(`/auth/login`, {
         data: {
           email: 'demo@qa.com',
           password: 'demo123',
@@ -23,7 +22,7 @@ test.describe('Auth Endpoint', () => {
 
     test('GET /me: with valid token returns 200 and user info (id, email)', async ({ request }) => {
       // First, obtaining JWT token
-      const loginResponse = await request.post(`${BASE_URL}/auth/login`, {
+      const loginResponse = await request.post(`/auth/login`, {
         data: {
           email: 'demo@qa.com',
           password: 'demo123',
@@ -33,7 +32,7 @@ test.describe('Auth Endpoint', () => {
       const bodyPost = await loginResponse.json();
 
       // Then call /me with token
-      const response = await request.get(`${BASE_URL}/me`, {
+      const response = await request.get(`/me`, {
         headers: {
           Authorization: `Bearer ${bodyPost.token}`,
         },
@@ -48,7 +47,7 @@ test.describe('Auth Endpoint', () => {
 
   test.describe('Validation and Error Handling', () => {
     test('POST /auth/login: invalid credentials return 401, UNAUTHORIZED', async ({ request }) => {
-      const response = await request.post(`${BASE_URL}/auth/login`, {
+      const response = await request.post(`/auth/login`, {
         data: {
           email: 'demo@qa.com',
           password: 'WrongPassword',
@@ -62,7 +61,7 @@ test.describe('Auth Endpoint', () => {
     });
 
     test('POST /auth/login: non-existent user returns 401, UNAUTHORIZED', async ({ request }) => {
-      const response = await request.post(`${BASE_URL}/auth/login`, {
+      const response = await request.post(`/auth/login`, {
         data: {
           email: 'not-a-registered-user@qa.com',
           password: 'random123',
@@ -75,7 +74,7 @@ test.describe('Auth Endpoint', () => {
     });
 
     test('POST /auth/login: missing email returns 400 (VALIDATION_ERROR)', async ({ request }) => {
-      const response = await request.post(`${BASE_URL}/auth/login`, {
+      const response = await request.post(`/auth/login`, {
         data: {
           email: '',
           password: 'demo123',
@@ -88,7 +87,7 @@ test.describe('Auth Endpoint', () => {
     });
 
     test('POST /auth/login: missing password returns 400 (VALIDATION_ERROR)', async ({ request }) => {
-      const response = await request.post(`${BASE_URL}/auth/login`, {
+      const response = await request.post(`/auth/login`, {
         data: {
           email: 'demo@qa.com',
         },
@@ -100,7 +99,7 @@ test.describe('Auth Endpoint', () => {
     });
 
     test('GET /me: without token returns 401 (UNAUTHORIZED)', async ({ request }) => {
-      const response = await request.get(`${BASE_URL}/me`, {
+      const response = await request.get(`/me`, {
         headers: {
           Authorization: `Bearer `,
         },
@@ -114,7 +113,7 @@ test.describe('Auth Endpoint', () => {
     test('should reject expired token ', async ({ request }) => {
       // Login to get a valid token
       const validToken = await getAuthToken(request);
-      const meResponse = await request.get(`${BASE_URL}/me`, {
+      const meResponse = await request.get(`/me`, {
         headers: {
           Authorization: `Bearer ${validToken}`,
         },
@@ -130,7 +129,7 @@ test.describe('Auth Endpoint', () => {
       );
       
       // Testing Authentication with the expired token
-      const response = await request.get(`${BASE_URL}/me`, {
+      const response = await request.get(`/me`, {
         headers: {
           Authorization: `Bearer ${expiredToken}`,
         },

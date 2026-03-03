@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import { getAuthToken, createAccount } from '../helpers/index';
-const BASE_URL = process.env.API_BASE_URL;
 
 test.describe('Deposits Endpoint', () => {
   test.describe('Happy Path', () => {
@@ -11,7 +10,7 @@ test.describe('Deposits Endpoint', () => {
       const amount = 100.5;
 
       // Make a deposit
-      const response = await request.post(`${BASE_URL}/deposits`, {
+      const response = await request.post(`/deposits`, {
         headers: { Authorization: `Bearer ${token}` },
         data: {
           accountId: accountId,
@@ -32,7 +31,7 @@ test.describe('Deposits Endpoint', () => {
       const accountId = accountResult.body.id;
 
       // First deposit
-      const firstDepositResponse = await request.post(`${BASE_URL}/deposits`, {
+      const firstDepositResponse = await request.post(`/deposits`, {
         headers: { Authorization: `Bearer ${token}` },
         data: {
           accountId: accountId,
@@ -45,7 +44,7 @@ test.describe('Deposits Endpoint', () => {
       expect(firstDepositBody.balance).toBe('40.00');
 
       // Second deposit
-      const secondDepositResponse = await request.post(`${BASE_URL}/deposits`, {
+      const secondDepositResponse = await request.post(`/deposits`, {
         headers: { Authorization: `Bearer ${token}` },
         data: {
           accountId: accountId,
@@ -67,7 +66,7 @@ test.describe('Deposits Endpoint', () => {
         const accountId = accountResult.body.id;
         const amount = 0;
 
-        const response = await request.post(`${BASE_URL}/deposits`, {
+        const response = await request.post(`/deposits`, {
           headers: { Authorization: `Bearer ${token}` },
           data: {
             accountId: accountId,
@@ -89,7 +88,7 @@ test.describe('Deposits Endpoint', () => {
         const accountId = accountResult.body.id;
         const amount = -10;
 
-        const response = await request.post(`${BASE_URL}/deposits`, {
+        const response = await request.post(`/deposits`, {
           headers: { Authorization: `Bearer ${token}` },
           data: {
             accountId: accountId,
@@ -107,7 +106,7 @@ test.describe('Deposits Endpoint', () => {
         const token = await getAuthToken(request);
         const amount = 50;
 
-        const response = await request.post(`${BASE_URL}/deposits`, {
+        const response = await request.post(`/deposits`, {
           headers: { Authorization: `Bearer ${token}` },
           data: { amount },
         });
@@ -122,7 +121,7 @@ test.describe('Deposits Endpoint', () => {
         const token = await getAuthToken(request);
         const unknownAccountId = '11111111-2222-3333-44b4-55fe55555a55';
 
-        const response = await request.post(`${BASE_URL}/deposits`, {
+        const response = await request.post(`/deposits`, {
           headers: { Authorization: `Bearer ${token}` },
           data: {
             accountId: unknownAccountId,
@@ -148,7 +147,7 @@ test.describe('Deposits Endpoint', () => {
         const user2Token = await getAuthToken(request, 'second-demo@qa.com', 'demo123');
 
         // Try deposit to user1's account using user2's token
-        const response = await request.post(`${BASE_URL}/deposits`, {
+        const response = await request.post(`/deposits`, {
           headers: { Authorization: `Bearer ${user2Token}` },
           data: {
             accountId: user1AccountId,
@@ -168,7 +167,7 @@ test.describe('Deposits Endpoint', () => {
         const accountResult = await createAccount(request, token);
         const accountId = accountResult.body.id;
 
-        const response = await request.post(`${BASE_URL}/deposits`, {
+        const response = await request.post(`/deposits`, {
           headers: { Authorization: `Bearer ${token}` },
           data: { accountId },
         });
@@ -185,7 +184,7 @@ test.describe('Deposits Endpoint', () => {
         const accountResult = await createAccount(request, token);
         const accountId = accountResult.body.id;
 
-        const response = await request.post(`${BASE_URL}/deposits`, {
+        const response = await request.post(`/deposits`, {
           headers: { Authorization: `Bearer ${token}` },
           data: { accountId, amount: 'string-amount' },
         });
@@ -200,7 +199,7 @@ test.describe('Deposits Endpoint', () => {
         const accountResult = await createAccount(request, authResponse.token);
         const accountId = accountResult.body.id;
 
-        const response = await request.post(`${BASE_URL}/deposits`, {
+        const response = await request.post(`/deposits`, {
           data: {
             accountId,
             amount: 50,
@@ -219,7 +218,7 @@ test.describe('Deposits Endpoint', () => {
       const accountResult = await createAccount(request, authResponse.token);
       const accountId = accountResult.body.id;
 
-      const response = await request.post(`${BASE_URL}/deposits`, {
+      const response = await request.post(`/deposits`, {
         headers: { Authorization: `Bearer invalid-token` },
         data: {
           accountId,

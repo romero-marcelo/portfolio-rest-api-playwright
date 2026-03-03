@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import { getAuthToken, createAccount, makeDeposit } from '../helpers/index';
-const BASE_URL = process.env.API_BASE_URL;
 
 test.describe('Transactions Endpoint', () => {
   test.describe('Happy Path', () => {
@@ -13,7 +12,7 @@ test.describe('Transactions Endpoint', () => {
       await makeDeposit(request, token, accountId, 200, 'Second deposit');
 
       // Fetch transactions
-      const response = await request.get(`${BASE_URL}/transactions?accountId=${accountId}`, {
+      const response = await request.get(`/transactions?accountId=${accountId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const body = await response.json();
@@ -33,7 +32,7 @@ test.describe('Transactions Endpoint', () => {
       await makeDeposit(request, token, accountId, 150, 'Salary payment');
 
       // Fetch transactions
-      const response = await request.get(`${BASE_URL}/transactions?accountId=${accountId}`, {
+      const response = await request.get(`/transactions?accountId=${accountId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const body = await response.json();
@@ -64,7 +63,7 @@ test.describe('Transactions Endpoint', () => {
       await makeDeposit(request, token, usdAccountId, amountUsd, 'Deposit to USD account');
 
       // Fetch transactions for EUR account
-      const responseEur = await request.get(`${BASE_URL}/transactions?accountId=${eurAccountId}`, {
+      const responseEur = await request.get(`/transactions?accountId=${eurAccountId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const bodyEur = await responseEur.json();
@@ -74,7 +73,7 @@ test.describe('Transactions Endpoint', () => {
       expect(bodyEur.items[0].reference).toBe('Deposit to EUR account');
 
       // Fetch transactions for USD account
-      const responseUsd = await request.get(`${BASE_URL}/transactions?accountId=${usdAccountId}`, {
+      const responseUsd = await request.get(`/transactions?accountId=${usdAccountId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const bodyUsd = await responseUsd.json();
@@ -93,7 +92,7 @@ test.describe('Transactions Endpoint', () => {
       }
 
       // Fetch transactions with limit=3
-      const response = await request.get(`${BASE_URL}/transactions?accountId=${accountId}&limit=3`, {
+      const response = await request.get(`/transactions?accountId=${accountId}&limit=3`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const body = await response.json();
@@ -113,7 +112,7 @@ test.describe('Transactions Endpoint', () => {
         await makeDeposit(request, token, accountId, i * 10, `Deposit# ${i}`);
       }
       // Fetch page 1 with limit=5 (transactions 10-6)
-      const responsePage1 = await request.get(`${BASE_URL}/transactions?accountId=${accountId}&page=1&limit=5`, {
+      const responsePage1 = await request.get(`/transactions?accountId=${accountId}&page=1&limit=5`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const bodyPage1 = await responsePage1.json();
@@ -124,7 +123,7 @@ test.describe('Transactions Endpoint', () => {
       expect(bodyPage1.items[0].reference).toBe('Deposit# 10'); // Newest transaction first
 
       // Fetch page 2 with limit=5 (transactions 5-1)
-      const responsePage2 = await request.get(`${BASE_URL}/transactions?accountId=${accountId}&page=2&limit=5`, {
+      const responsePage2 = await request.get(`/transactions?accountId=${accountId}&page=2&limit=5`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const bodyPage2 = await responsePage2.json();
@@ -145,7 +144,7 @@ test.describe('Transactions Endpoint', () => {
       }
 
       // Fetch page 2 with limit=5 (beyond last page)
-      const response = await request.get(`${BASE_URL}/transactions?accountId=${accountId}&page=2&limit=5`, {
+      const response = await request.get(`/transactions?accountId=${accountId}&page=2&limit=5`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const bodyPage2 = await response.json();
@@ -167,7 +166,7 @@ test.describe('Transactions Endpoint', () => {
     }
 
     // Fetch transactions without page & limit (should default to page=1, limit=20)
-    const response = await request.get(`${BASE_URL}/transactions?accountId=${accountId}`, {
+    const response = await request.get(`/transactions?accountId=${accountId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const body = await response.json();
@@ -183,7 +182,7 @@ test.describe('Validation and Error Handling', () => {
   test('GET /transactions: invalid token returns 401 (UNAUTHORIZED)', async ({ request }) => {
     const invalidToken = 'fakeToken123';
 
-    const response = await request.get(`${BASE_URL}/transactions?accountId=some-id`, {
+    const response = await request.get(`/transactions?accountId=some-id`, {
       headers: { Authorization: `Bearer ${invalidToken}` },
     });
     const body = await response.json();
@@ -194,7 +193,7 @@ test.describe('Validation and Error Handling', () => {
   test('GET /transactions: missing accountId returns 400 (VALIDATION_ERROR)', async ({ request }) => {
     const token = await getAuthToken(request);
 
-    const response = await request.get(`${BASE_URL}/transactions`, {
+    const response = await request.get(`/transactions`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const body = await response.json();
@@ -208,7 +207,7 @@ test.describe('Validation and Error Handling', () => {
     const token = await getAuthToken(request); // Endpoint validates the request before checking if account exists, so we can use fake accountId for this test
 
     // Invalid page (negative number -1)
-    const response = await request.get(`${BASE_URL}/transactions?accountId=some-id&page=-1`, {
+    const response = await request.get(`/transactions?accountId=some-id&page=-1`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const body = await response.json();
@@ -221,7 +220,7 @@ test.describe('Validation and Error Handling', () => {
     const token = await getAuthToken(request);
 
     // Invalid limit (zero)
-    const response = await request.get(`${BASE_URL}/transactions?accountId=some-id&limit=0`, {
+    const response = await request.get(`/transactions?accountId=some-id&limit=0`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const body = await response.json();
@@ -234,7 +233,7 @@ test.describe('Validation and Error Handling', () => {
     const token = await getAuthToken(request);
 
     // Limit exceeding maximum (e.g., 101)
-    const response = await request.get(`${BASE_URL}/transactions?accountId=some-id&limit=101`, {
+    const response = await request.get(`/transactions?accountId=some-id&limit=101`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const body = await response.json();
@@ -247,7 +246,7 @@ test.describe('Validation and Error Handling', () => {
     const token = await getAuthToken(request);
     const unknownAccountId = '11111111-2222-3333-44b4-55fe55555a55'; // Random UUID that doesn't exist in the system
 
-    const response = await request.get(`${BASE_URL}/transactions?accountId=${unknownAccountId}`, {
+    const response = await request.get(`/transactions?accountId=${unknownAccountId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const body = await response.json();
@@ -265,7 +264,7 @@ test.describe('Validation and Error Handling', () => {
     await makeDeposit(request, tokenUser1, accountId, 100, 'User1 deposit');
     
     // Verify user1 can access their own transactions
-    const user1Response = await request.get(`${BASE_URL}/transactions?accountId=${accountId}`, {
+    const user1Response = await request.get(`/transactions?accountId=${accountId}`, {
       headers: { Authorization: `Bearer ${tokenUser1}` },
     });
     const user1Body = await user1Response.json();
@@ -274,7 +273,7 @@ test.describe('Validation and Error Handling', () => {
 
     // Try to fetch user1's transactions using user2's token
     const tokenUser2 = await getAuthToken(request, 'second-demo@qa.com', 'demo123');
-    const response = await request.get(`${BASE_URL}/transactions?accountId=${accountId}`, {
+    const response = await request.get(`/transactions?accountId=${accountId}`, {
       headers: { Authorization: `Bearer ${tokenUser2}` },
     });
     const body = await response.json();
@@ -285,7 +284,7 @@ test.describe('Validation and Error Handling', () => {
   });
 
   test('GET /transactions: missing token returns 401 (UNAUTHORIZED)', async ({ request }) => {
-    const response = await request.get(`${BASE_URL}/transactions?accountId=some-id`, {
+    const response = await request.get(`/transactions?accountId=some-id`, {
       headers: { Authorization: `` },
     });
     const body = await response.json();
