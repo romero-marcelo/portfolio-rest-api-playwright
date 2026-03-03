@@ -1,5 +1,7 @@
+import { APIRequestContext } from '@playwright/test';
+
 export async function getAuthToken(
-  request: any,
+  request: APIRequestContext,
   email: string = 'demo@qa.com',
   password: string = 'demo123'
 ) {

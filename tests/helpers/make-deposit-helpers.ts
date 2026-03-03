@@ -1,5 +1,7 @@
+import { APIRequestContext } from '@playwright/test';
+
 export async function makeDeposit(
-  request: any,
+  request: APIRequestContext,
   token: string,
   accountId: string,
   amount: number,

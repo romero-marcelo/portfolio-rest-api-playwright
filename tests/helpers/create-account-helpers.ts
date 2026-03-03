@@ -1,4 +1,6 @@
-export async function createAccount(request: any, token: string, currency = 'EUR') {
+import { APIRequestContext } from '@playwright/test';
+
+export async function createAccount(request: APIRequestContext, token: string, currency = 'EUR') {
   const response = await request.post(`/accounts`, {
     headers: {
       Authorization: `Bearer ${token}`,
